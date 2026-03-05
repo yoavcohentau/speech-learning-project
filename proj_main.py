@@ -60,6 +60,46 @@ def taylor_main():
         DATA_SET_PATH,
         DATA_SET_NAME
     )
+
+    # load checkpoints
+    checkpoint_load_path = r".\DeepTaylorBeamformer\trained_model_weights"
+    # checkpoint_load_filename = r"best_e28_27_2_26.pth"
+    checkpoint_load_filename = r"best_e52_01_3_26.pth"
+    checkpoint = torch.load(os.path.join(checkpoint_load_path, checkpoint_load_filename),
+                            map_location=torch.device('cpu'))
+
+    taylor_net = TaylorBeamformer(
+        k1=[1, 3],
+        k2=[2, 3],
+        ref_mic=0,
+        c=64,
+        embed_dim=64,
+        fft_num=320,
+        order_num=3,
+        kd1=5,
+        cd1=64,
+        d_feat=256,
+        dilations=[1, 2, 5, 9],
+        group_num=2,
+        hid_node=64,
+        M=5,
+        rnn_type="LSTM",
+        intra_connect="cat",
+        inter_connect="cat",
+        out_type="mapping",
+        bf_type="embedding",
+        norm2d_type="BN",
+        norm1d_type="BN",
+        is_compress=False,
+        is_total_separate=False,
+        is_u2=True,
+        is_1dgate=True,
+        is_squeezed=False,
+        is_causal=True,
+        is_param_share=False
+    )
+    taylor_net.load_state_dict(checkpoint)
+
     for T60 in T60_vec:
         for snr in snr_vec:
             for example_idx, (signal_object, interferer_object) in enumerate(zip(signal_objects, interferer_objects)):
@@ -130,45 +170,6 @@ def taylor_main():
                 print("MVDR Done.")
 
                 # --- (2) Deep Taylor ---
-                # load checkpoints
-                checkpoint_load_path = r".\DeepTaylorBeamformer\trained_model_weights"
-                # checkpoint_load_filename = r"best_e28_27_2_26.pth"
-                checkpoint_load_filename = r"best_e52_01_3_26.pth"
-                checkpoint = torch.load(os.path.join(checkpoint_load_path, checkpoint_load_filename), map_location=torch.device('cpu'))
-
-                taylor_net = TaylorBeamformer(
-                            k1=[1, 3],
-                            k2=[2, 3],
-                            ref_mic=0,
-                            c=64,
-                            embed_dim=64,
-                            fft_num=320,
-                            order_num=3,
-                            kd1=5,
-                            cd1=64,
-                            d_feat=256,
-                            dilations=[1, 2, 5, 9],
-                            group_num=2,
-                            hid_node=64,
-                            M=5,
-                            rnn_type="LSTM",
-                            intra_connect="cat",
-                            inter_connect="cat",
-                            out_type="mapping",
-                            bf_type="embedding",
-                            norm2d_type="BN",
-                            norm1d_type="BN",
-                            is_compress=False,
-                            is_total_separate=False,
-                            is_u2=True,
-                            is_1dgate=True,
-                            is_squeezed=False,
-                            is_causal=True,
-                            is_param_share=False
-                        )
-                # taylor_net.load_state_dict(checkpoint["model_state_dict"])
-                taylor_net.load_state_dict(checkpoint)
-
                 # Case 1: White Noise
                 taylor_white_out = apply_taylor_net(taylor_net, noisy_white, fs)
                 taylor_white_out = taylor_white_out[:min_len]
