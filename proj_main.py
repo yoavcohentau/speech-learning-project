@@ -12,16 +12,15 @@ from utils.librispeech_data_set_utils import load_librispeech_objects_from_yaml
 from DeepTaylorBeamformer.nets.TaylorBeamformer import TaylorBeamformer
 from DeepTaylorBeamformer.taylor_inference_func import apply_taylor_net, align_signal
 
-PLOT_AND_SAVE_FLAG = True
+PLOT_AND_SAVE_FLAG = False
 EXAMPLE_IDX_TO_SAVE = 0
-SNR_TO_SAVE = 10
+SNR_TO_SAVE = 0
 T60_TO_SAVE = 0.3
 ORIGINAL_SIGNAL_FACTOR = 0.7
 
+# TODO: user - please change here to your Librispeech data path
 DATA_SET_NAME = "dev-clean"  # "dev-clean" or "test-clean"
 DATA_SET_PATH = fr"J:\My Drive\Courses\2026A\Signal Processing and Machine Learning for Speech\HW\HW1\SpeechLearningCourseEx1\data\{DATA_SET_NAME}\LibriSpeech"
-
-DNS48_WEIGHTS_PATH = r"C:\Users\Yoav Cohen\Desktop\repositories\SpeechLearningCourseEx1\Ex2\denoiser_weights\dns48-11decc9d8e3f0998.th"
 
 
 def taylor_main():
@@ -112,9 +111,7 @@ def taylor_main():
 
                 # --- Plot & Save ---
                 # Save metrics
-                # target_clean_ref_1, mvdr_white_out_1 = align_signal(target_clean_ref, mvdr_white_out)
                 metrics[f'MVDR-white-{snr}-{T60}-{example_idx}'] = metrics_tool.compute_all(target_clean_ref, mvdr_white_out)
-                # target_clean_ref_2, mvdr_inter_out_2 = align_signal(target_clean_ref, mvdr_inter_out)
                 metrics[f'MVDR-inter-{snr}-{T60}-{example_idx}'] = metrics_tool.compute_all(target_clean_ref, mvdr_inter_out)
 
                 if PLOT_AND_SAVE_FLAG and example_idx == EXAMPLE_IDX_TO_SAVE and snr == SNR_TO_SAVE and T60 == T60_TO_SAVE:
@@ -190,7 +187,6 @@ def taylor_main():
                                                                                               taylor_inter_out_2)
 
                 if PLOT_AND_SAVE_FLAG and example_idx == EXAMPLE_IDX_TO_SAVE and snr == SNR_TO_SAVE and T60 == T60_TO_SAVE:
-                    # if example_idx == 0 and snr == 10 and T60 == 0.3:
                     # White Noise
                     wavfile.write("output_folder_proj/taylor_white_out.wav", fs, taylor_white_out.astype(np.float32))
                     plot_time_freq_analysis(target_clean_ref / ORIGINAL_SIGNAL_FACTOR, ref_noisy_white,
