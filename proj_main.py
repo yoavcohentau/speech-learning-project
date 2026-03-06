@@ -63,7 +63,6 @@ def taylor_main():
 
     # load checkpoints
     checkpoint_load_path = r".\DeepTaylorBeamformer\trained_model_weights"
-    # checkpoint_load_filename = r"best_e28_27_2_26.pth"
     checkpoint_load_filename = r"best_e52_01_3_26.pth"
     checkpoint = torch.load(os.path.join(checkpoint_load_path, checkpoint_load_filename),
                             map_location=torch.device('cpu'))
