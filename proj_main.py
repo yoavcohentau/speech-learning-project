@@ -18,7 +18,7 @@ SNR_TO_SAVE = 0
 T60_TO_SAVE = 0.3
 ORIGINAL_SIGNAL_FACTOR = 0.7
 
-# TODO: user - please change here to your Librispeech data path
+# TODO: user - please change the following two lines to your LibriSpeech data path
 DATA_SET_NAME = "dev-clean"  # "dev-clean" or "test-clean"
 DATA_SET_PATH = fr"J:\My Drive\Courses\2026A\Signal Processing and Machine Learning for Speech\HW\HW1\SpeechLearningCourseEx1\data\{DATA_SET_NAME}\LibriSpeech"
 
