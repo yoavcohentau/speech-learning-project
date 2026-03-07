@@ -8,9 +8,9 @@ from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
 import torch
 from tqdm import tqdm
 
-# -------- הגדרות נתיבים --------
+# -------- path --------
 clean_dir = r"J:\My Drive\Courses\YoavAndItayShared\Speech\DataSet_train\clean"
-# שתי תיקיות התוצאות להשוואה
+# results
 enhanced_folders = {
     'MVDR Method A': r"J:\My Drive\Courses\YoavAndItayShared\Speech\DataSet_train\mvdr_out",
     'MVDR Method B': r"J:\My Drive\Courses\YoavAndItayShared\Speech\DataSet_train\bf_cache\wavs"
@@ -46,26 +46,23 @@ def get_metrics_for_folder(folder_path):
             results['SI-SDR'].append(sisdr_metric(deg_t, ref_t).item())
 
         except Exception as e:
-            pass  # מדלג על קבצים בעייתיים
+            pass
 
-    # מחזיר ממוצעים לכל מדד בתיקייה הזו
     return {m: np.mean(val) for m, val in results.items()}
 
 
-# -------- הרצת החישובים --------
 all_stats = {}
 for name, path in enhanced_folders.items():
     print(f"\nEvaluating {name}...")
     all_stats[name] = get_metrics_for_folder(path)
 
 
-# -------- יצירת גרף השוואתי --------
 def plot_comparison(stats_dict):
     methods = list(stats_dict.keys())
     metrics = ['PESQ', 'ESTOI']#, 'SI-SDR']
 
-    x = np.arange(len(metrics))  # מיקומי המדדים
-    width = 0.35  # רוחב העמודות
+    x = np.arange(len(metrics))
+    width = 0.35
 
     fig, ax = plt.subplots(figsize=(12, 7))
 
@@ -89,7 +86,6 @@ def plot_comparison(stats_dict):
 
 plot_comparison(all_stats)
 
-# הדפסת טבלה מספרית
 print("\n" + "=" * 30)
 print(f"{'Method':<20} | {'PESQ':<7} | {'ESTOI':<7} | {'SI-SDR':<7}")
 print("-" * 50)

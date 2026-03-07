@@ -10,7 +10,6 @@ def copy_all_files_flat(source_root, destination_folder):
     If duplicate filenames exist, a numeric suffix will be added.
     """
 
-    # וידוא שתיקיית היעד קיימת
     os.makedirs(destination_folder, exist_ok=True)
 
     for root, dirs, files in os.walk(source_root):
@@ -18,7 +17,7 @@ def copy_all_files_flat(source_root, destination_folder):
             source_path = os.path.join(root, filename)
             destination_path = os.path.join(destination_folder, filename)
 
-            # טיפול בהתנגשות שמות
+            # double naming issue
             if os.path.exists(destination_path):
                 name, ext = os.path.splitext(filename)
                 counter = 1

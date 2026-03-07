@@ -1,6 +1,5 @@
 import os
 import json
-import argparse
 
 
 def build_json_from_folder(folder_path):
